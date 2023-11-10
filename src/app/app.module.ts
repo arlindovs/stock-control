@@ -9,6 +9,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { HomeComponent } from './modules/home/home.component';
 import { PageNotFoundComponentComponent } from './modules/page-not-found-component/page-not-found-component.component';
 import { PrimengModule } from './primeng.module';
+import { CookieService } from 'ngx-cookie-service';
 
 @NgModule({
   declarations: [
@@ -24,7 +25,7 @@ import { PrimengModule } from './primeng.module';
     ReactiveFormsModule,
     HttpClientModule,
   ],
-  providers: [],
+  providers: [CookieService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -1,35 +1,92 @@
+import { CookieService } from 'ngx-cookie-service';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { SignupUserRequest } from 'src/app/models/interfaces/user/SignupUserRequest';
+import { AuthRequest } from 'src/app/models/interfaces/user/auth/AuthRequest';
+import { UserService } from 'src/app/services/usuario/user.service';
 
+/**
+ * Componente responsável pela página inicial da aplicação.
+ */
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
-  styleUrls: ['./home.component.scss']
+  styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent implements OnInit {
+  /**
+   * Flag que indica se o card de login está visível.
+   */
   loginCard = true;
 
+  /**
+   * Formulário de login.
+   */
   loginForm = this.fb.group({
     email: ['', [Validators.required, Validators.email]],
-    password: ['', Validators.required]
+    password: ['', Validators.required],
   });
 
+  /**
+   * Formulário de cadastro.
+   */
   signupForm = this.fb.group({
     name: ['', Validators.required],
     email: ['', [Validators.required, Validators.email]],
-    password: ['', Validators.required]
+    password: ['', Validators.required],
   });
 
-  constructor(private fb: FormBuilder) {}
+  constructor(
+    private fb: FormBuilder,
+    private userService: UserService,
+    private cookieService: CookieService
+  ) {}
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
+  /**
+   * Método que é chamado quando o formulário de login é submetido.
+   * Autentica o usuário e salva o token no cookie.
+   */
   onSubmitLoginForm(): void {
-    console.log('Dados do Formulario de Login: ',this.loginForm.value);
+    if (this.loginForm.value && this.loginForm.valid) {
+      this.userService.authUser(this.loginForm.value as AuthRequest).subscribe({
+        next: (response) => {
+          if (response) {
+            this.cookieService.set('token', response?.token);
+            alert('Usuário autenticado com sucesso!');
+            this.loginForm.reset();
+          }
+        },
+        error: (err) => {
+          alert(`Erro ao autenticar usuário: ${err.error.message}`);
+          console.log('Erro ao autenticar usuário: ', err);
+        },
+      });
+    }
   }
 
+  /**
+   * Método que é chamado quando o formulário de cadastro é submetido.
+   * Cadastra o usuário e exibe uma mensagem de sucesso.
+   */
   onSubmitSignupForm(): void {
-    console.log('Dados do Formulario de Criação: ',this.signupForm.value);
+    if (this.signupForm.value && this.signupForm.valid) {
+      this.userService
+        .signupUser(this.signupForm.value as SignupUserRequest)
+        .subscribe({
+          next: (response) => {
+            if (response) {
+              alert('Usuário cadastrado com sucesso!');
+              this.signupForm.reset();
+              this.loginCard = true;
+            }
+          },
+          error: (err) => {
+            alert(`Erro ao cadastrar usuário: ${err.error.message}`);
+            console.log('Erro ao cadastrar usuário: ', err);
+          },
+        });
+    }
   }
 }
