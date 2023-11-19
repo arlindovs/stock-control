@@ -75,7 +75,7 @@ export class HomeComponent implements OnInit {
           this.messageService.add({
             severity: 'error',
             summary: 'Erro',
-            detail: `Erro ao fazer Login: ${err.error.message}`,
+            detail: `Erro ao fazer Login: ${err.error.message}}`,
             life: 2000,
           });
           console.log('Erro ao autenticar usuário: ', err);
