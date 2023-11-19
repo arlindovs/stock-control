@@ -10,6 +10,7 @@ import { HomeComponent } from './modules/home/home.component';
 import { PageNotFoundComponentComponent } from './modules/page-not-found-component/page-not-found-component.component';
 import { PrimengModule } from './primeng.module';
 import { CookieService } from 'ngx-cookie-service';
+import { MessageService } from 'primeng/api';
 
 @NgModule({
   declarations: [
@@ -25,7 +26,7 @@ import { CookieService } from 'ngx-cookie-service';
     ReactiveFormsModule,
     HttpClientModule,
   ],
-  providers: [CookieService],
+  providers: [CookieService, MessageService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

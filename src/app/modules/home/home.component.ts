@@ -1,3 +1,4 @@
+import { MessageService } from 'primeng/api';
 import { CookieService } from 'ngx-cookie-service';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -39,7 +40,8 @@ export class HomeComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private userService: UserService,
-    private cookieService: CookieService
+    private cookieService: CookieService,
+    private messageService: MessageService,
   ) {}
 
   ngOnInit(): void {}
@@ -54,12 +56,25 @@ export class HomeComponent implements OnInit {
         next: (response) => {
           if (response) {
             this.cookieService.set('token', response?.token);
-            alert('Usuário autenticado com sucesso!');
+            // alert('Usuário autenticado com sucesso!');
             this.loginForm.reset();
+
+            this.messageService.add({
+              severity: 'success',
+              summary: 'Sucesso',
+              detail: `Bem vindo de volta ${response?.name}!`,
+              life: 2000,
+            });
           }
         },
         error: (err) => {
-          alert(`Erro ao autenticar usuário: ${err.error.message}`);
+          // alert(`Erro ao autenticar usuário: ${err.error.message}`);
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Erro',
+            detail: `Erro ao fazer Login: ${err.error.message}`,
+            life: 2000,
+          });
           console.log('Erro ao autenticar usuário: ', err);
         },
       });
@@ -77,13 +92,26 @@ export class HomeComponent implements OnInit {
         .subscribe({
           next: (response) => {
             if (response) {
-              alert('Usuário cadastrado com sucesso!');
+              // alert('Usuário cadastrado com sucesso!');
               this.signupForm.reset();
               this.loginCard = true;
+
+              this.messageService.add({
+                severity: 'success',
+                summary: 'Sucesso',
+                detail: 'Usuario criado com sucesso!',
+                life: 2000,
+              });
             }
           },
           error: (err) => {
-            alert(`Erro ao cadastrar usuário: ${err.error.message}`);
+            // alert(`Erro ao cadastrar usuário: ${err.error.message}`);
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Erro',
+              detail: `Erro ao criar usuario: ${err.error.message}`,
+              life: 2000,
+            });
             console.log('Erro ao cadastrar usuário: ', err);
           },
         });
