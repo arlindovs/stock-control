@@ -5,6 +5,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { SignupUserRequest } from 'src/app/models/interfaces/user/SignupUserRequest';
 import { AuthRequest } from 'src/app/models/interfaces/user/auth/AuthRequest';
 import { UserService } from 'src/app/services/usuario/user.service';
+import { Router } from '@angular/router';
 
 /**
  * Componente responsável pela página inicial da aplicação.
@@ -42,6 +43,7 @@ export class HomeComponent implements OnInit {
     private userService: UserService,
     private cookieService: CookieService,
     private messageService: MessageService,
+    private router: Router,
   ) {}
 
   ngOnInit(): void {}
@@ -58,6 +60,7 @@ export class HomeComponent implements OnInit {
             this.cookieService.set('token', response?.token);
             // alert('Usuário autenticado com sucesso!');
             this.loginForm.reset();
+            this.router.navigate(['/dashboard']);
 
             this.messageService.add({
               severity: 'success',
