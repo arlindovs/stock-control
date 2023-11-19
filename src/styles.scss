@@ -160,12 +160,12 @@
 //   margin-top: 30vh;
 // }
 
-// .exact_route {
-//   button {
-//     background-color: #6372c3 !important;
-//   }
+.exact_route {
+  button {
+    background-color: #6372c3 !important;
+  }
 
-//   :host ::ng-deep .p-dropdown {
-//     width: 50%;
-//   }
-// }
+  :host ::ng-deep .p-dropdown {
+    width: 50%;
+  }
+}

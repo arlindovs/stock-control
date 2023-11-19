@@ -8,15 +8,14 @@ import { AppComponent } from './app.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HomeComponent } from './modules/home/home.component';
 import { PageNotFoundComponentComponent } from './modules/page-not-found-component/page-not-found-component.component';
-import { PrimengModule } from './primeng.module';
+import { PrimengModule } from './PrimeNG/primeng.module';
 import { CookieService } from 'ngx-cookie-service';
 import { MessageService } from 'primeng/api';
-
 @NgModule({
   declarations: [
     AppComponent,
     HomeComponent,
-    PageNotFoundComponentComponent
+    PageNotFoundComponentComponent,
   ],
   imports: [
     PrimengModule,
