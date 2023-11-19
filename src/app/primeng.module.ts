@@ -5,6 +5,7 @@ import { ButtonModule } from 'primeng/button';
 import { ToastModule } from 'primeng/toast';
 import { SidebarModule } from 'primeng/sidebar';
 import { ToolbarModule } from 'primeng/toolbar';
+import { ChartModule } from 'primeng/chart';
 
 
 @NgModule({
@@ -16,6 +17,7 @@ import { ToolbarModule } from 'primeng/toolbar';
     ToastModule,
     SidebarModule,
     ToolbarModule,
+    ChartModule,
   ],
   exports: [
     CardModule,
@@ -24,6 +26,7 @@ import { ToolbarModule } from 'primeng/toolbar';
     ToastModule,
     SidebarModule,
     ToolbarModule,
+    ChartModule,
   ]
 })
 export class PrimengModule { }
