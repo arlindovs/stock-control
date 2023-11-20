@@ -27,7 +27,7 @@ export class ProductsService {
    * Obtém todos os produtos disponíveis.
    * @returns Um Observable contendo um array de objetos GetAllProductsResponse.
    */
-  gerAllProducts(): Observable<Array<GetAllProductsResponse>> {
+  getAllProducts(): Observable<Array<GetAllProductsResponse>> {
     return this.http
       .get<Array<GetAllProductsResponse>>(
         `${this.API_URL}/products`,
