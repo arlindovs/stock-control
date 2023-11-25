@@ -1,5 +1,5 @@
 export interface GetAllProductsResponse {
-  ig: string;
+  id: string;
   name: string;
   amount: number;
   description: string;
