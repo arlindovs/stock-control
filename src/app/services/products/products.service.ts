@@ -5,8 +5,10 @@ import { CookieService } from 'ngx-cookie-service';
 import { Observable, map } from 'rxjs';
 import { DeleteProductAction } from 'src/app/models/interfaces/products/event/DeleteProductAction';
 import { EditProductRequest } from 'src/app/models/interfaces/products/request/EditProductRequest';
+import { SaleProductRequest } from 'src/app/models/interfaces/products/request/SaleProductRequest';
 import { CreateProductResponse } from 'src/app/models/interfaces/products/response/CreateProductResponse';
 import { GetAllProductsResponse } from 'src/app/models/interfaces/products/response/GetAllProductsResponse';
+import { SaleProductResponse } from 'src/app/models/interfaces/products/response/SaleProductResponse';
 import { environment } from 'src/environments/environment';
 
 /**
@@ -50,7 +52,9 @@ export class ProductsService {
     );
   }
 
-  createProduct(requestDatas: CreateProductRequest): Observable<CreateProductResponse> {
+  createProduct(
+    requestDatas: CreateProductRequest
+  ): Observable<CreateProductResponse> {
     return this.http.post<CreateProductResponse>(
       `${this.API_URL}/product`,
       requestDatas,
@@ -63,6 +67,21 @@ export class ProductsService {
       `${this.API_URL}/product/edit`,
       requestDatas,
       this.httpOptions
+    );
+  }
+
+  saleProduct(
+    requestDatas: SaleProductRequest
+  ): Observable<SaleProductResponse> {
+    return this.http.put<SaleProductResponse>(
+      `${this.API_URL}/product/sale`,
+      {
+        amount: requestDatas?.amount,
+      },
+      {
+        ...this.httpOptions,
+        params: { product_id: requestDatas?.product_id },
+      }
     );
   }
 }

@@ -13,6 +13,7 @@ import { GetAllProductsResponse } from 'src/app/models/interfaces/products/respo
 import { ProductsDataTransferService } from 'src/app/shared/services/products/products-data-transfer.service';
 import { ProductEvent } from 'src/app/models/enums/products/ProductEvent';
 import { EditProductRequest } from 'src/app/models/interfaces/products/request/EditProductRequest';
+import { SaleProductRequest } from 'src/app/models/interfaces/products/request/SaleProductRequest';
 
 /**
  * Componente responsável por exibir um formulário de produto.
@@ -22,6 +23,9 @@ import { EditProductRequest } from 'src/app/models/interfaces/products/request/E
   templateUrl: './product-form.component.html',
   styleUrls: [],
 })
+/**
+ * Componente responsável por exibir o formulário de produto.
+ */
 export class ProductFormComponent implements OnInit, OnDestroy {
   /**
    * Subject utilizado para destruir observables quando o componente é destruído.
@@ -82,6 +86,22 @@ export class ProductFormComponent implements OnInit, OnDestroy {
     amount: [0, Validators.required],
     category_id: ['', Validators.required],
   });
+
+  /**
+    * Grupo de formulário para o formulário de venda de produto.
+    *
+    * @remarks
+    * Este grupo de formulário contém os controles e validações para o formulário de venda de produto.
+    */
+  public saleProductForm = this.formBuilder.group({
+    amount: [0, Validators.required],
+    product_id: ['', Validators.required],
+  });
+
+  /**
+   * Produto selecionado para venda.
+   */
+  public saleProductSelected!: GetAllProductsResponse;
 
   /**
    * Ação para adicionar um produto.
@@ -226,6 +246,47 @@ export class ProductFormComponent implements OnInit, OnDestroy {
               life: 2500,
             });
             this.editProductForm.reset();
+          },
+        });
+    }
+  }
+
+  /**
+   * Manipula o envio do formulário de venda de produto.
+   */
+  handleSubmitSaleProduct(): void {
+    if (this.saleProductForm?.value && this.saleProductForm?.valid) {
+      const requestDatas: SaleProductRequest = {
+        amount: this.saleProductForm.value?.amount as number,
+        product_id: this.saleProductForm.value?.product_id as string,
+      };
+
+      this.productsService
+        .saleProduct(requestDatas)
+        .pipe(takeUntil(this.destroy$))
+        .subscribe({
+          next: (response) => {
+            if(response) {
+              this.messageService.add({
+                severity: 'success',
+                summary: 'Sucesso',
+                detail: 'Produto vendido com sucesso!',
+                life: 2500,
+              });
+            this.saleProductForm.reset();
+            this.getProductDatas();
+            this.router.navigate(['/dashboard']);
+          }
+          },
+          error: (err) => {
+            console.log(err);
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Erro',
+              detail: 'Erro ao vender produto!',
+              life: 2500,
+            });
+            this.saleProductForm.reset();
           },
         });
     }
