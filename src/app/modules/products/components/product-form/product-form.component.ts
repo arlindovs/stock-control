@@ -14,29 +14,56 @@ import { ProductsDataTransferService } from 'src/app/shared/services/products/pr
 import { ProductEvent } from 'src/app/models/enums/products/ProductEvent';
 import { EditProductRequest } from 'src/app/models/interfaces/products/request/EditProductRequest';
 
+/**
+ * Componente responsável por exibir um formulário de produto.
+ */
 @Component({
   selector: 'app-product-form',
   templateUrl: './product-form.component.html',
   styleUrls: [],
 })
 export class ProductFormComponent implements OnInit, OnDestroy {
+  /**
+   * Subject utilizado para destruir observables quando o componente é destruído.
+   */
   private readonly destroy$: Subject<void> = new Subject<void>();
 
+  /**
+   * Array contendo os dados das categorias.
+   */
   public categoriesDatas: Array<GetAllCategoriesResponse> = [];
 
+  /**
+   * Array contendo as categorias selecionadas.
+   */
   public selectedCategory: Array<{ name: string; code: string }> = [];
 
+  /**
+   * Flag para renderizar o dropdown.
+   */
   public renderDropdown = false;
 
+  /**
+   * Objeto contendo a ação do produto e os dados dos produtos.
+   */
   public productAction!: {
     event: EventAction;
     productsDatas: Array<GetAllProductsResponse>;
   };
 
+  /**
+   * Dados do produto selecionado.
+   */
   public productSelectedDatas!: GetAllProductsResponse;
 
+  /**
+   * Array contendo os dados dos produtos.
+   */
   public productsDatas: Array<GetAllProductsResponse> = [];
 
+  /**
+   * Formulário para adicionar um produto.
+   */
   public addProductForm = this.formBuilder.group({
     name: ['', Validators.required],
     description: ['', Validators.required],
@@ -45,6 +72,9 @@ export class ProductFormComponent implements OnInit, OnDestroy {
     category_id: ['', Validators.required],
   });
 
+  /**
+   * Formulário para editar um produto.
+   */
   public editProductForm = this.formBuilder.group({
     name: ['', Validators.required],
     price: ['', Validators.required],
@@ -53,8 +83,19 @@ export class ProductFormComponent implements OnInit, OnDestroy {
     category_id: ['', Validators.required],
   });
 
+  /**
+   * Ação para adicionar um produto.
+   */
   public addProductAction = ProductEvent.ADD_PRODUCT_EVENT;
+
+  /**
+   * Ação para editar um produto.
+   */
   public editProductAction = ProductEvent.EDIT_PRODUCT_EVENT;
+
+  /**
+   * Ação para vender um produto.
+   */
   public saleProductAction = ProductEvent.SALE_PRODUCT_EVENT;
 
   constructor(
@@ -67,16 +108,23 @@ export class ProductFormComponent implements OnInit, OnDestroy {
     public ref: DynamicDialogConfig
   ) {}
 
+  /**
+   * Método executado ao inicializar o componente.
+   */
   ngOnInit(): void {
     this.productAction = this.ref.data;
 
-    this.productAction?.event?.action === this.saleProductAction &&
+    if (this.productAction?.event?.action === this.saleProductAction) {
       this.getProductDatas();
+    }
 
     this.getAllCategories();
     this.renderDropdown = true;
   }
 
+  /**
+   * Obtém todas as categorias.
+   */
   getAllCategories(): void {
     this.categoriesService
       .getAllCategories()
@@ -97,6 +145,9 @@ export class ProductFormComponent implements OnInit, OnDestroy {
       });
   }
 
+  /**
+   * Manipula o envio do formulário de adição de produto.
+   */
   handleSubmitAddProduct(): void {
     if (this.addProductForm?.valid && this.addProductForm?.value) {
       const requestCreateProduct: CreateProductRequest = {
@@ -135,6 +186,9 @@ export class ProductFormComponent implements OnInit, OnDestroy {
     this.addProductForm.reset();
   }
 
+  /**
+   * Manipula o envio do formulário de edição de produto.
+   */
   handleSubmitEditProduct(): void {
     if (
       this.editProductForm.value &&
@@ -177,6 +231,10 @@ export class ProductFormComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Obtém os dados do produto selecionado.
+   * @param productId O ID do produto selecionado.
+   */
   getProductSelectedDatas(productId: string): void {
     const allProducts = this.productAction?.productsDatas;
 
@@ -199,6 +257,9 @@ export class ProductFormComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Obtém os dados dos produtos.
+   */
   getProductDatas(): void {
     this.productsService
       .getAllProducts()
@@ -214,6 +275,9 @@ export class ProductFormComponent implements OnInit, OnDestroy {
       });
   }
 
+  /**
+   * Método executado ao destruir o componente.
+   */
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();

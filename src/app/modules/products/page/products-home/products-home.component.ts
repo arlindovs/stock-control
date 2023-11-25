@@ -9,6 +9,9 @@ import { GetAllProductsResponse } from 'src/app/models/interfaces/products/respo
 import { EventAction } from 'src/app/models/interfaces/products/event/EventAction';
 import { ProductFormComponent } from '../../components/product-form/product-form.component';
 
+/**
+ * Componente responsável pela exibição da página inicial de produtos.
+ */
 @Component({
   selector: 'app-products-home',
   templateUrl: './products-home.component.html',
@@ -28,9 +31,17 @@ export class ProductsHomeComponent implements OnInit, OnDestroy {
     private dialogService: DialogService
   ) {}
 
+  /**
+   * Método executado ao inicializar o componente.
+   */
   ngOnInit(): void {
     this.getServiceProductsDatas();
   }
+
+  /**
+   * Obtém os dados dos produtos do serviço de transferência de dados.
+   * Se não houver dados carregados, chama o método para obter os dados da API.
+   */
   getServiceProductsDatas() {
     const productsLoaded = this.productsDtService.getProductsDatas();
     if (productsLoaded.length > 0) {
@@ -38,6 +49,9 @@ export class ProductsHomeComponent implements OnInit, OnDestroy {
     } else this.getAPIProductsDatas();
   }
 
+  /**
+   * Obtém os dados dos produtos da API.
+   */
   getAPIProductsDatas() {
     this.productsService
       .getAllProducts()
@@ -60,6 +74,10 @@ export class ProductsHomeComponent implements OnInit, OnDestroy {
       });
   }
 
+  /**
+   * Manipula a ação do produto.
+   * @param event Ação do produto.
+   */
   handleProductAction(event: EventAction): void {
     if (event) {
       this.ref = this.dialogService.open(ProductFormComponent, {
@@ -79,6 +97,10 @@ export class ProductsHomeComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Manipula a exclusão do produto.
+   * @param event Dados do produto a ser excluído.
+   */
   handleDeleteProduct(event: {
     product_id: string;
     productName: string;
@@ -95,6 +117,10 @@ export class ProductsHomeComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Exclui o produto.
+   * @param product_id ID do produto a ser excluído.
+   */
   deleteProduct(product_id: string) {
     if (product_id) {
       this.productsService
@@ -125,6 +151,9 @@ export class ProductsHomeComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Executado ao destruir o componente.
+   */
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
